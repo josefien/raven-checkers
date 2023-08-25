@@ -84,7 +84,8 @@ INTACT_DOUBLE_CORNER = 3
 
 BLACK_IDX = [5, 6]
 WHITE_IDX = [-5, -6]
-KING_IDX = [-6, -5, 5, 6]
+CAPTURE_IDX = [-6, -5, 5, 6]
+KING_IDX = [-11, -5, 5, 6]
 
 FIRST = 0
 MID = 1

@@ -1,6 +1,7 @@
 import sys
 import ai.games as games
 from util.globalconst import CB_MAP, IMAP
+import tinybot.tinybot as tinybot
 
 
 class Player(object):
@@ -13,7 +14,7 @@ class Player(object):
 
 
 class AlphabetaPlayer(Player):
-    def __init__(self, color, depth=4):
+    def __init__(self, color, depth=10):
         Player.__init__(self, color)
         self.searchDepth = depth
 
@@ -29,6 +30,7 @@ class AlphabetaPlayer(Player):
         move = '-'.join(positions)
         print(f'I move {move}')
         return move_list
+
 
 
 class HumanPlayer(Player):

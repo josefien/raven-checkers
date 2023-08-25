@@ -5,7 +5,7 @@ from util.globalconst import BLACK, WHITE, KING, MAN, OCCUPIED, BLACK_CHAR, WHIT
 from util.globalconst import BLACK_KING, WHITE_KING, FREE, OCCUPIED_CHAR, FREE_CHAR
 from util.globalconst import COLORS, TYPES, TURN, CRAMP, BRV, KEV, KCV, MEV, MCV
 from util.globalconst import INTACT_DOUBLE_CORNER, ENDGAME, OPENING, MIDGAME
-from util.globalconst import create_grid_map, KING_IDX, BLACK_IDX, WHITE_IDX
+from util.globalconst import create_grid_map, KING_IDX, BLACK_IDX, WHITE_IDX, CAPTURE_IDX
 
 
 class Checkerboard(object):
@@ -19,9 +19,14 @@ class Checkerboard(object):
     #            12  13  14  15
     #          6   7   8   9
     #   (black)
-    valid_squares = [6, 7, 8, 9, 12, 13, 14, 15, 17, 18, 19, 20, 23, 24, 25, 26,
-                     28, 29, 30, 31, 34, 35, 36, 37, 39, 40, 41, 42, 45, 46,
-                     47, 48]
+    valid_squares = [6, 7, 8, 9,
+                     12, 13, 14, 15,
+                     17, 18, 19, 20,
+                     23, 24, 25, 26,
+                     28, 29, 30, 31,
+                     34, 35, 36, 37,
+                     39, 40, 41, 42,
+                     45, 46, 47, 48]
     # values of pieces (KING, MAN, BLACK, WHITE, FREE)
     value = [0, 0, 0, 0, 0, 1, 256, 0, 0, 16, 4096, 0, 0, 0, 0, 0, 0]
     edge = [6, 7, 8, 9, 15, 17, 26, 28, 37, 39, 45, 46, 47, 48]
@@ -70,13 +75,13 @@ class Checkerboard(object):
                                           lookup(sq[36]), lookup(sq[37]))
         s += "5 %s   %s   %s   %s\n" % (lookup(sq[28]), lookup(sq[29]),
                                         lookup(sq[30]), lookup(sq[31]))
-        s += "4   %s   %s   %s   %s\n" % (lookup(sq[23]), lookup(sq[24]),
+        s += "4   %s   %s   %s   %s\n" % (lookup(sq[23]), lookup(sq[24]), 
                                           lookup(sq[25]), lookup(sq[26]))
-        s += "3 %s   %s   %s   %s\n" % (lookup(sq[17]), lookup(sq[18]),
+        s += "3 %s   %s   %s   %s\n" % (lookup(sq[17]), lookup(sq[18]),  
                                         lookup(sq[19]), lookup(sq[20]))
         s += "2   %s   %s   %s   %s\n" % (lookup(sq[12]), lookup(sq[13]),
                                           lookup(sq[14]), lookup(sq[15]))
-        s += "1 %s   %s   %s   %s\n" % (lookup(sq[6]), lookup(sq[7]),
+        s += "1 %s   %s   %s   %s\n" % (lookup(sq[6]), lookup(sq[7]),   
                                         lookup(sq[8]), lookup(sq[9]))
         s += "  a b c d e f g h"
         return s
@@ -264,11 +269,11 @@ class Checkerboard(object):
 
     def _capture_man(self, player, squares, mid, dest, last_pos):
         sq2 = [mid, squares[mid], FREE]
-        if ((player == BLACK and last_pos >= 34) or
-                (player == WHITE and last_pos <= 20)):
-            sq3 = [dest, FREE, player | KING]
-        else:
-            sq3 = [dest, FREE, player | MAN]
+        #if ((player == BLACK and last_pos >= 34) or
+        #        (player == WHITE and last_pos <= 20)):
+        #    sq3 = [dest, FREE, player | KING]
+        #else:
+        sq3 = [dest, FREE, player | MAN]
         return sq2, sq3
 
     def _capture_king(self, player, squares, mid, dest, last_pos):
@@ -280,7 +285,7 @@ class Checkerboard(object):
         player = self.to_move
         enemy = self.enemy
         squares = self.squares
-        valid_indices = WHITE_IDX if player == WHITE else BLACK_IDX
+        valid_indices = CAPTURE_IDX
         all_captures = []
         for i in self.valid_squares:
             if squares[i] & player and squares[i] & MAN:
@@ -290,11 +295,11 @@ class Checkerboard(object):
                     if squares[mid] & enemy and squares[dest] & FREE:
                         sq1 = [i, player | MAN, FREE]
                         sq2 = [mid, squares[mid], FREE]
-                        if ((player == BLACK and i >= 34) or
-                                (player == WHITE and i <= 20)):
-                            sq3 = [dest, FREE, player | KING]
-                        else:
-                            sq3 = [dest, FREE, player | MAN]
+                        #if ((player == BLACK and dest >= 39) or
+                        #        (player == WHITE and dest <= 15)):
+                        #    sq3 = [dest, FREE, player | KING]
+                        #else:
+                        sq3 = [dest, FREE, player | MAN]
                         capture = [Move([sq1, sq2, sq3])]
                         visited = set()
                         visited.add((i, mid, dest))
